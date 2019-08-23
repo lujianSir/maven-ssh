@@ -26,5 +26,6 @@ public class DemoController {
 		People p = demoService.newPeople();
 		demoService.queryPeople(p);
 		return "ceshi";
+
 	}
 }
