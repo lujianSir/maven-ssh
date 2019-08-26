@@ -1,7 +1,6 @@
 package com.hcoding.demo.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,18 +9,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * 老师表 测试一对多
+ * 学生表 测试多对一
  * 
  * @author Administrator
  *
  */
 @Entity
-@Table(name = "people")
-public class People implements Serializable {
+@Table(name = "student")
+public class Student implements Serializable {
 
 	/**
 	 * 
@@ -29,24 +29,21 @@ public class People implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "sex")
-	private String sex;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // 一般控制权会交给多的一方
+	@JoinColumn(name = "pid") // 会在student表中多出一列：pid，如果不设置这个属性，数据库会新增一个中间表维护user和group的记录
+	private People people;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "people")
-	private Set<Student> students;
-
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -58,20 +55,12 @@ public class People implements Serializable {
 		this.name = name;
 	}
 
-	public String getSex() {
-		return sex;
+	public People getPeople() {
+		return people;
 	}
 
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public Set<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(Set<Student> students) {
-		this.students = students;
+	public void setPeople(People people) {
+		this.people = people;
 	}
 
 	public static long getSerialversionuid() {
@@ -80,7 +69,7 @@ public class People implements Serializable {
 
 	@Override
 	public String toString() {
-		return "People [id=" + id + ", name=" + name + ", sex=" + sex + ", students=" + students + "]";
+		return "Student [id=" + id + ", name=" + name + ", people=" + people + "]";
 	}
 
 }
